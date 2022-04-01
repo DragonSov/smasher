@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:14.2
+    volumes:
+      - /home/stanislav/PostgreSQL:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: "smasher"
+      POSTGRES_USER: "stanislav"
+      POSTGRES_PASSWORD: "B9Q7M3FbKEMDKJGwaBKkPQ4AC5dRf3fH"
