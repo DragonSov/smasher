@@ -37,8 +37,8 @@ func (repo *WalletRepositoryDb) CreateTransaction(t TransactionModel) (*Transact
 }
 
 func (repo *WalletRepositoryDb) SelectUserWallets(id uuid.UUID) (*[]WalletModel, error) {
-	// Creating an array with wallets
-	w := []WalletModel{}
+	// Creating an empty array for wallets
+	var w []WalletModel
 	err := repo.Client.Select(&w, "SELECT * FROM wallets WHERE user_id = $1", id)
 	if err == sql.ErrNoRows {
 		return nil, nil
@@ -62,6 +62,19 @@ func (repo *WalletRepositoryDb) SelectWalletByUUID(id uuid.UUID) (*WalletModel, 
 	}
 
 	return &w, nil
+}
+
+func (repo *WalletRepositoryDb) SelectWalletTransactions(id uuid.UUID) (*[]TransactionModel, error) {
+	//Creating an empty array for transactions
+	var t []TransactionModel
+	err := repo.Client.Select(&t, "SELECT * FROM transactions WHERE sender = $1 OR recipient = $1", id)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	} else if err != nil {
+		return nil, err
+	}
+
+	return &t, nil
 }
 
 func (repo *WalletRepositoryDb) UpdateWalletByUUID(w WalletModel) (*WalletModel, error) {

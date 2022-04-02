@@ -23,6 +23,7 @@ func WalletRoutes(apiRouter *gin.RouterGroup, db *sqlx.DB) {
 		route.POST("/", h.CreateWallet)
 		route.GET("/", h.SelectUserWallets)
 		route.GET("/:uuid", h.SelectWalletByUUID)
+		route.GET("/:uuid/transactions", h.SelectWalletTransactions)
 		route.PUT("/:uuid/replenish", h.ReplenishWalletByUUID)
 		route.PUT("/:uuid/transfer", h.TransferWalletByUUID)
 		route.DELETE("/:uuid", h.DeleteWalletByUUID)

@@ -94,6 +94,53 @@ func (h WalletHandlers) SelectWalletByUUID(c *gin.Context) {
 	})
 }
 
+func (h WalletHandlers) SelectWalletTransactions(c *gin.Context) {
+	// Getting the current user and wallet ID
+	u, _ := c.Get("authUser")
+	walletID, err := uuid.Parse(c.Param("uuid"))
+	if err != nil {
+		c.JSON(500, gin.H{
+			"status":  "error",
+			"message": "Failed to get the wallet ID. Try again later",
+		})
+		return
+	}
+
+	// Selecting this wallet
+	wallet, err := h.Service.SelectWalletByUUID(walletID)
+	if err != nil || wallet == nil {
+		c.JSON(404, gin.H{
+			"status":  "error",
+			"message": "Wallet not found",
+		})
+		return
+	}
+
+	// Checking user access permissions to the sender's wallet
+	if wallet.UserID != u.(Users.UserModel).ID {
+		c.JSON(403, gin.H{
+			"status":  "error",
+			"message": "You do not have access to this wallet",
+		})
+		return
+	}
+
+	transactions, err := h.Service.SelectWalletTransactions(wallet.ID)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"status":  "error",
+			"message": "Failed to get wallet transactions. Try again later",
+		})
+		return
+	}
+
+	// Returning wallet transactions
+	c.JSON(200, gin.H{
+		"status": "success",
+		"data":   transactions,
+	})
+}
+
 func (h WalletHandlers) ReplenishWalletByUUID(c *gin.Context) {
 	// Parsing wallet ID
 	walletID, err := uuid.Parse(c.Param("uuid"))

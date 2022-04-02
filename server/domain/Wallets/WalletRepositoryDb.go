@@ -25,6 +25,7 @@ type WalletRepository interface {
 	CreateWallet(WalletModel) (*WalletModel, error)
 	CreateTransaction(TransactionModel) (*TransactionModel, error)
 	SelectUserWallets(uuid.UUID) (*[]WalletModel, error)
+	SelectWalletTransactions(uuid.UUID) (*[]TransactionModel, error)
 	SelectWalletByUUID(uuid.UUID) (*WalletModel, error)
 	UpdateWalletByUUID(WalletModel) (*WalletModel, error)
 	DeleteWalletByUUID(uuid.UUID) error

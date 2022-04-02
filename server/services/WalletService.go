@@ -14,6 +14,7 @@ type WalletService interface {
 	CreateTransaction(Wallets.TransactionModel) (*Wallets.TransactionModel, error)
 	SelectUserWallets(uuid.UUID) (*[]Wallets.WalletModel, error)
 	SelectWalletByUUID(uuid.UUID) (*Wallets.WalletModel, error)
+	SelectWalletTransactions(uuid.UUID) (*[]Wallets.TransactionModel, error)
 	UpdateWalletByUUID(Wallets.WalletModel) (*Wallets.WalletModel, error)
 	DeleteWalletByUUID(uuid.UUID) error
 }
@@ -59,6 +60,16 @@ func (db DefaultWalletService) SelectWalletByUUID(id uuid.UUID) (*Wallets.Wallet
 	}
 
 	return wallet, nil
+}
+
+func (db DefaultWalletService) SelectWalletTransactions(id uuid.UUID) (*[]Wallets.TransactionModel, error) {
+	// Selecting transactions
+	transactions, err := db.repo.SelectWalletTransactions(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return transactions, err
 }
 
 func (db DefaultWalletService) UpdateWalletByUUID(w Wallets.WalletModel) (*Wallets.WalletModel, error) {
