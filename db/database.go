@@ -1,6 +1,7 @@
 package db
 
 import (
+	"fmt"
 	_ "github.com/jackc/pgx/stdlib"
 	"github.com/jmoiron/sqlx"
 	"os"
@@ -41,5 +42,8 @@ func Init() {
 	}
 
 	// Creating a schema
-	//DB.MustExec(schema)
+	_, err = DB.Exec(schema)
+	if err != nil {
+		fmt.Println("An error occurred during the creation of the schema. All tables have probably already been created")
+	}
 }
